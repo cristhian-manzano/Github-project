@@ -5,11 +5,7 @@ import ReposList from "../components/repos/ReposList";
 import GithubContext from "../context/github/GithubContext";
 import Spinner from "../components/layout/Spinner";
 
-import {
-  getUser,
-  getUserAndRepos,
-  getUserRepos,
-} from "../context/github/GithubActions";
+import { getUserAndRepos } from "../context/github/GithubActions";
 
 function User() {
   const { user, loading, repos, dispatch } = useContext(GithubContext);
