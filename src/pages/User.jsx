@@ -2,18 +2,30 @@ import { useEffect, useContext } from "react";
 import { FaCodepen, FaStore, FaUserFriends, FaUsers } from "react-icons/fa";
 import { useParams, Link } from "react-router-dom";
 import ReposList from "../components/repos/ReposList";
-
 import GithubContext from "../context/github/GithubContext";
+import Spinner from "../components/layout/Spinner";
+
+import {
+  getUser,
+  getUserAndRepos,
+  getUserRepos,
+} from "../context/github/GithubActions";
 
 function User() {
-  const { getUser, user, repos, getUserRepos } = useContext(GithubContext);
+  const { user, loading, repos, dispatch } = useContext(GithubContext);
 
   const params = useParams();
 
   useEffect(() => {
-    getUser(params.login);
-    getUserRepos(params.login);
-  }, []);
+    dispatch({ type: "SET_LOADING" });
+
+    const getUserData = async () => {
+      const userData = await getUserAndRepos(params.login);
+      dispatch({ type: "GET_USER_AND_REPOS", payload: userData });
+    };
+
+    getUserData();
+  }, [dispatch, params.login]);
 
   const {
     name,
@@ -31,6 +43,10 @@ function User() {
     public_gists,
     hireable,
   } = user;
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <>
